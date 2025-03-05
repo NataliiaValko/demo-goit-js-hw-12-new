@@ -7,42 +7,91 @@ import {
   clearGallery,
   createGallery,
   hideLoader,
+  scrollWindow,
   showLoader,
+  toggleLoadMoreBtn,
+  updateGallery,
 } from './js/render-functions';
 
 const formEl = document.querySelector('.search-form');
+const loadMoreBtn = document.querySelector('.load-more');
 
-function handleSubmit(event) {
+let query = '';
+let page = 1;
+
+async function handleSubmit(event) {
   event.preventDefault();
-  const data = Object.fromEntries(new FormData(event.target));
 
-  if (data.message === '') {
+  query = event.target.elements.message.value.trim();
+  event.target.reset();
+
+  if (query === '') {
     return;
   }
 
   showLoader();
+  toggleLoadMoreBtn({});
   clearGallery();
+  page = 1;
 
-  getImagesByQuery(data.message)
-    .then(({ hits: results }) => {
-      if (results.length === 0) {
-        iziToast.info({
-          message:
-            'Sorry, there are no images matching your search query. Please try again!',
-        });
-        return;
-      }
+  try {
+    const { hits, totalHits } = await getImagesByQuery({ query, page });
 
-      createGallery(results);
-    })
-    .catch(err => {
-      iziToast.error({
-        message: 'Error!!!',
+    if (hits.length === 0) {
+      iziToast.info({
+        position: 'topRight',
+        message:
+          'Sorry, there are no images matching your search query. Please try again!',
       });
-    })
-    .finally(() => {
-      hideLoader();
-    });
+      return;
+    }
+
+    createGallery(hits);
+    toggleLoadMoreBtn({ totalHits, page });
+    if (totalHits <= page * 15) {
+      iziToast.info({
+        position: 'topRight',
+        message: "We're sorry, but you've reached the end of search results.",
+      });
+    }
+  } catch (err) {
+    iziToast.error({ position: 'topRight', message: 'Error!!!' });
+  } finally {
+    hideLoader();
+  }
+}
+
+async function handleLoadMore() {
+  page += 1;
+  showLoader();
+  toggleLoadMoreBtn({});
+  try {
+    const { hits, totalHits } = await getImagesByQuery({ query, page });
+
+    if (hits.length === 0) {
+      iziToast.info({
+        position: 'topRight',
+        message: "We're sorry, but you've reached the end of search results.",
+      });
+      toggleLoadMoreBtn({ totalHits, page });
+      return;
+    }
+
+    updateGallery(hits);
+    scrollWindow();
+    toggleLoadMoreBtn({ totalHits, page });
+    if (totalHits <= page * 15) {
+      iziToast.info({
+        position: 'topRight',
+        message: "We're sorry, but you've reached the end of search results.",
+      });
+    }
+  } catch (err) {
+    iziToast.error({ position: 'topRight', message: err.message });
+  } finally {
+    hideLoader();
+  }
 }
 
 formEl.addEventListener('submit', handleSubmit);
+loadMoreBtn.addEventListener('click', handleLoadMore);
