@@ -1,7 +1,7 @@
 import iziToast from 'izitoast';
 
 import { getImagesByQuery } from './js/pixabay-api';
-import icon from './imgicon.svg';
+import icon from './img/icon.svg';
 
 import 'izitoast/dist/css/iziToast.min.css';
 import {
