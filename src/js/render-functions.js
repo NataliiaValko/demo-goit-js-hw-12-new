@@ -77,10 +77,17 @@ export function showLoader() {
   preloader.classList.add('show');
 }
 
-export function hideLoader() {}
+export function hideLoader() {
+  preloader.classList.remove('show');
+}
 
 export function toggleLoadMoreBtn({ totalHits = [], page = 1 }) {
   loadMoreBtn.classList.toggle('hidden', totalHits <= page * 15);
 }
 
-export function scrollWindow() {}
+export function scrollWindow() {
+  window.scrollBy({
+    top: galleryEl.firstElementChild.getBoundingClientRect().height * 2,
+    behavior: 'smooth',
+  });
+}
