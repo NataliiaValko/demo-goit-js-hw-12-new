@@ -94,7 +94,7 @@ async function handleLoadMore() {
     if (hits.length === 0) {
       iziToast.error({
         position: 'topRight',
-        message: "We're sorry, but you've reached the end of search results.",
+        message: "Sorry, there are no images matching your search query. Please, try again!",
         maxWidth: '432px',
         backgroundColor: '#EF4040',
         messageColor: '#FAFAFB',
