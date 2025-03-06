@@ -1,6 +1,7 @@
 import iziToast from 'izitoast';
 
 import { getImagesByQuery } from './js/pixabay-api';
+import icon from './imgicon.svg';
 
 import 'izitoast/dist/css/iziToast.min.css';
 import {
@@ -38,10 +39,18 @@ async function handleSubmit(event) {
     const { hits, totalHits } = await getImagesByQuery({ query, page });
 
     if (hits.length === 0) {
-      iziToast.info({
+      iziToast.error({
         position: 'topRight',
         message:
           'Sorry, there are no images matching your search query. Please try again!',
+        maxWidth: '432px',
+        backgroundColor: '#EF4040',
+        messageColor: '#FAFAFB',
+        iconColor: '#FAFAFB',
+        iconUrl: icon,
+        titleSize: '16px',
+        titleLineHeight: '24px',
+        progressBarColor: '#B51B1B',
       });
       return;
     }
@@ -52,10 +61,24 @@ async function handleSubmit(event) {
       iziToast.info({
         position: 'topRight',
         message: "We're sorry, but you've reached the end of search results.",
+        maxWidth: '432px',
+        titleSize: '16px',
+        titleLineHeight: '24px',
       });
     }
   } catch (err) {
-    iziToast.error({ position: 'topRight', message: 'Error!!!' });
+    iziToast.error({
+      position: 'topRight',
+      message: 'Error!!!',
+      maxWidth: '432px',
+      backgroundColor: '#EF4040',
+      messageColor: '#FAFAFB',
+      iconColor: '#FAFAFB',
+      iconUrl: icon,
+      titleSize: '16px',
+      titleLineHeight: '24px',
+      progressBarColor: '#B51B1B',
+    });
   } finally {
     hideLoader();
   }
@@ -69,9 +92,17 @@ async function handleLoadMore() {
     const { hits, totalHits } = await getImagesByQuery({ query, page });
 
     if (hits.length === 0) {
-      iziToast.info({
+      iziToast.error({
         position: 'topRight',
         message: "We're sorry, but you've reached the end of search results.",
+        maxWidth: '432px',
+        backgroundColor: '#EF4040',
+        messageColor: '#FAFAFB',
+        iconColor: '#FAFAFB',
+        iconUrl: icon,
+        titleSize: '16px',
+        titleLineHeight: '24px',
+        progressBarColor: '#B51B1B',
       });
       toggleLoadMoreBtn({ totalHits, page });
       return;
@@ -84,10 +115,24 @@ async function handleLoadMore() {
       iziToast.info({
         position: 'topRight',
         message: "We're sorry, but you've reached the end of search results.",
+        maxWidth: '432px',
+        titleSize: '16px',
+        titleLineHeight: '24px',
       });
     }
   } catch (err) {
-    iziToast.error({ position: 'topRight', message: err.message });
+    iziToast.error({
+      position: 'topRight',
+      message: err.message,
+      maxWidth: '432px',
+      backgroundColor: '#EF4040',
+      messageColor: '#FAFAFB',
+      iconColor: '#FAFAFB',
+      iconUrl: icon,
+      titleSize: '16px',
+      titleLineHeight: '24px',
+      progressBarColor: '#B51B1B',
+    });
   } finally {
     hideLoader();
   }
